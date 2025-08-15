@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_testing/providers/counter.dart';
+import 'package:riverpod_testing/test_view.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -14,7 +15,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final counter = ref.watch(counterProvider);
-    final counterController = ref.read(counterProvider.notifier);
 
     ref.listen(counterProvider, (prev, curr) {
       debugPrint("state change: $prev, $curr");
@@ -28,24 +28,21 @@ class _HomeViewState extends ConsumerState<HomeView> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Text("state: $counter"),
-            TextButton(
-              onPressed: () {
-                counterController.increment();
-              },
-              child: Text('increment'),
+            Text(
+              "state: $counter",
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w800),
             ),
             TextButton(
+              child: Text(
+                "open other view",
+                style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w300),
+              ),
               onPressed: () {
-                counterController.decrement();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const TestView()),
+                );
               },
-              child: Text('decrement'),
-            ),
-            TextButton(
-              onPressed: () {
-                ref.invalidate(counterProvider);
-              },
-              child: Text('invalidate provider'),
             ),
           ],
         ),
